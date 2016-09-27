@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Exception;
+use Illuminate\Session\TokenMismatchException;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -21,6 +22,7 @@ class Handler extends ExceptionHandler
         HttpException::class,
         ModelNotFoundException::class,
         ValidationException::class,
+        TokenMismatchException::class
     ];
 
     /**
@@ -49,6 +51,9 @@ class Handler extends ExceptionHandler
         if (get_class($e) == 'Exception') {
           return response()->json(['message'=>$e->getMessage()], 422);
         }
+          if ($e instanceof TokenMismatchException) {
+              return response()->json(['redirect' => url('login'), 'message'=>'Your session has expired'], 440);
+          }
       }
 
       // if ($e instanceof ModelNotFoundException) {

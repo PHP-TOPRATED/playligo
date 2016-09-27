@@ -17,5 +17,6 @@ return [
     'new'                   => 'New Playlist',
     'pl_rating_count'       => 'Ratings',
     'pl_user'               => 'Owner',
+    'not_found'             => 'Playlist not found',
 
 ];

@@ -16,9 +16,9 @@
   		<nav id="mainmenu" class="navbar-right collapse navbar-collapse">
   			<ul class="nav navbar-nav">
           <li><a href="{{ url('/') }}">Home</a></li>
-          <li><a href="{{ url('/search') }}">Explore</a></li>
+          <li><a href="{{ url('/search') }}">Visualize</a></li>
           <li><a href="{{ url('/public_playlist') }}">Playlists</a></li>
-          <li><a href="{{ url('/public_poll') }}">Polls</a></li>
+          {{--<li><a href="{{ url('/public_poll') }}">Polls</a></li>--}}
           @if (Auth::guest())
               <li><a href="{{ url('/login') }}">Login</a></li>
               <li><a href="{{ url('/register') }}">Register</a></li>
@@ -35,7 +35,7 @@
 
                   <ul class="dropdown-menu" role="menu">
                     <li><a href="{{ url('/playlist') }}">My Playlists</a></li>
-                    <li><a href="{{ url('/poll') }}">My Polls</a></li>
+                    {{--<li><a href="{{ url('/poll') }}">My Polls</a></li>--}}
                     <li><a href="{{ url('/profile/edit') }}">Edit profile</a></li>
                     <li><a href="{{ url('/password/edit') }}">Change password</a></li>
                     <li><a href="{{ url('/logout') }}">Logout</a></li>

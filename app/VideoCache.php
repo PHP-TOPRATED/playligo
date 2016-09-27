@@ -14,11 +14,6 @@ class VideoCache extends Model
 
     public function massCreate(array $batch)
     {
-        // foreach ($batch as $item) {
-        //     if (!$this->find($item->id->videoId)) {
-        //         $this->create(['vc_id' => $item->id->videoId, 'vc_kind' => $item->kind, 'vc_etag' => $item->etag, 'vc_snippet' => serialize($item->snippet) ]);
-        //     }
-        // }
         foreach ($batch as $key => $group) {
           if (!empty($group)) {
             foreach ($group as $item) {

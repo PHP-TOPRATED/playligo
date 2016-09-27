@@ -5,7 +5,7 @@
       <div class="post medium-post">
         <div class="entry-header">
           <div class="entry-thumbnail play_image_container">
-            <a href="{{ url('public_playlist/' . $mv_item->pl_id) }}"><img class="img-responsive" src="{{ $mv_item->pl_thumb_path or asset(config('playligo.video_thumb_default')) }}" alt=""></a>
+            <a href="{{ url('public_playlist/' . $mv_item->pl_slug) }}"><img class="img-responsive" src="{{ $mv_item->pl_thumb_path or asset(config('playligo.video_thumb_default')) }}" alt=""></a>
             <div class="play_button"><i class="fa fa-play-circle-o"></i></div>
           </div>
         </div>
@@ -18,7 +18,7 @@
             </ul>
           </div>
           <h2 class="entry-title">
-            <a href="{{ url('public_playlist/' . $mv_item->pl_id) }}">{{ str_limit($mv_item->pl_title, 100) }}</a>
+            <a href="{{ url('public_playlist/' . $mv_item->pl_slug) }}">{{ str_limit($mv_item->pl_title, 100) }}</a>
           </h2>
         </div>
       </div>

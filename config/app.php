@@ -147,6 +147,7 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
+        App\Services\GetYourGuide\GetYourGuideServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -162,6 +163,8 @@ return [
         Zizaco\Entrust\EntrustServiceProvider::class,
         Alaouy\Youtube\YoutubeServiceProvider::class,
         App\Providers\FormErrorServiceProvider::class,
+        GoogleMaps\ServiceProvider\GoogleMapsServiceProvider::class,
+        Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
 
     ],
 
@@ -215,7 +218,9 @@ return [
         'Entrust'   => Zizaco\Entrust\EntrustFacade::class,
         'Youtube'   => Alaouy\Youtube\YoutubeFacades::class,
         'FormError' => App\Playligo\Facades\FormErrorFacade::class,
+        'GoogleMaps' => GoogleMaps\Facade\GoogleMapsFacade::class,
         'Carbon' => 'Carbon\Carbon',
+        'GetYourGuide' => App\Services\GetYourGuide\Facade\GetYourGuide::class
 
     ],
 

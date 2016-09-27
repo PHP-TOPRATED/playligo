@@ -24,9 +24,9 @@
           <nav id="mainmenu" class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
                 <li><a href="{{ url('/') }}">Home</a></li>
-                <li><a href="{{ url('/search') }}">Explore</a></li>
+                <li><a href="{{ url('/search') }}">Visualize</a></li>
                 <li><a href="{{ url('/public_playlist') }}">Playlists</a></li>
-                <li><a href="{{ url('/public_poll') }}">Polls</a></li>
+                {{--<li><a href="{{ url('/public_poll') }}">Polls</a></li>--}}
             </ul>
 
             <ul class="nav navbar-nav navbar-right">
@@ -36,7 +36,7 @@
                     <li><a href="{{ url('/register') }}">Register</a></li>
                 @else
                     <li><a href="{{ url('/playlist') }}">My Playlists</a></li>
-                    <li><a href="{{ url('/poll') }}">My Polls</a></li>
+                    {{--<li><a href="{{ url('/poll') }}">My Polls</a></li>--}}
                     @if (auth()->user()->hasRole('admin'))
                     <li><a href="{{ url('/admin') }}"><i class="fa fa-gears"></i> Admin</a></li>
                     @endif

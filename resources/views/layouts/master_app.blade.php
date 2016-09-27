@@ -4,12 +4,13 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     @include('layouts.partials.meta')
     @yield('meta')
     <title>{{ $page_title or config('playligo.title') }}</title>
 
     <!-- Fonts -->
-    <link rel='shortcut icon' href='{{ asset('img/favicon-32x32.png') }}' type='image/x-icon'/ >
+    <link rel='shortcut icon' href='{{ asset('img/favicon-32x32.png') }}' type='image/x-icon'/>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" rel='stylesheet' type='text/css'>
     <!-- <link href="https://fonts.googleapis.com/css?family=Lato:100,300,400,700" rel='stylesheet' type='text/css'> -->
     <link href='https://fonts.googleapis.com/css?family=Signika+Negative:400,300,600,700' rel='stylesheet' type='text/css'>
@@ -28,6 +29,125 @@
     @yield('head_script')
 </head>
 <body>
+    {{-- if user has to leave feedback --}}
+    @if (Auth::user() && isset($shouldFeedback) && $shouldFeedback && request()->input('share') != 1)
+        <link href="{{ asset('css/bars-square.css') }}" rel="stylesheet">
+
+        <div class="modal fade" tabindex="-1" role="dialog" id="feedback-modal">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div style="padding: 35px 15px;" class="modal-body">
+                        <p style="font-size: 24px;" class="text-center">Please rate how effective is playligo in helping you discover and visualize new destinations</p>
+                        <select id="example" class="text-center">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                        </select>
+                        <a href="#" id="skip-feedback" class="pull-right" data-dismiss="modal">skip</a>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+
+        @include('layouts.partials.sharing_modal', ['message' => 'Please take a moment to share Playligo with your friends.'])
+
+        <div class="modal fade" tabindex="-1" role="dialog" id="feedback-comment-modal">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div style="padding: 35px 15px 25px 15px;" class="modal-body">
+                        <p style="font-size: 24px;" class="text-center">
+                            What will you say to friend to recommend Playligo.com?
+                        </p>
+                        <textarea id='feedback-comment' class="form-control" rows="10"></textarea>
+                        <div class="pull-right" style="margin-top: 20px;">
+                            <button class="btn btn-danger send-feedback">Skip</button>
+                            <button class="btn btn-success send-feedback" style="padding: 6px 12px">Submit</button>
+                        </div>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="{{ URL::asset('js/jquery.barrating.min.js')}}"></script>
+        <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-579c836873a36a19"></script>
+        <script>
+            var mark;
+            $(function() {
+                $('#feedback-modal').modal();
+            });
+
+            // Handle addthis sharing event
+            function eventHandler(evt) {
+                if (evt.type == 'addthis.menu.share') {
+                    $(".modal-backdrop").remove();
+                    $('#sharing-modal').hide();
+                    $('#feedback-comment-modal').modal('show');
+                }
+            }
+            addthis.addEventListener('addthis.menu.share', eventHandler);
+
+            $('#example').barrating({
+                theme: 'bars-square',
+                showSelectedRating: false,
+                showValues: true,
+                onSelect: function (value, text, event) {
+                    if (value <= 5) {
+                        sendRequest(value, '');
+                    } else {
+                        $(".modal-backdrop").remove();
+                        $('#feedback-modal').hide();
+                        $('#sharing-modal').modal('show');
+                        mark = value;
+                        {{--sendRequest("{{ Auth::user()->id }}", value, 'asd');--}}
+                    }
+                }
+            });
+
+            $('#skip-sharing').click(function () {
+                $(".modal-backdrop").remove();
+                $('#sharing-modal').hide();
+                $('#feedback-comment-modal').modal('show');
+            });
+
+            $('#skip-feedback').click(function () {
+                $(".modal-backdrop").remove();
+                $('#feedback-modal').hide();
+            });
+
+            $('.send-feedback').click(function () {
+                sendRequest(mark, $('#feedback-comment').val());
+            });
+
+            function sendRequest(mark, comment) {
+                $.ajax({
+                    url: "{{ url('feedback') }}",
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        user: "{{ Auth::user()->id }}",
+                        mark: mark,
+                        comment: comment
+                    },
+                    success: function (data) {
+                        $(".modal-backdrop").remove();
+                        $('#feedback-modal').hide();
+                        $('#feedback-comment-modal').hide();
+                        sweetAlert("Thanks for your feedback!");
+                    }
+                });
+            }
+        </script>
+    @endif
+
     @yield('master_content')
     @include('layouts.partials.modal')
 
@@ -38,6 +158,7 @@
     <!-- <script type="text/javascript" src="{{ URL::asset('js/jquery.rateyo.js')}}"></script> -->
     <script type="text/javascript" src="{{ URL::asset('js/jquery-ui.min.js')}}"></script>
     <script type="text/javascript" src="{{ URL::asset('js/moment.js')}}"></script>
+    @stack('scripts')
     {{-- <script src="{{ elixir('js/app.js') }}"></script> --}}
     <script type="text/javascript" src="{{ URL::asset('js/playligo-main.js')}}"></script>
     <script type="text/javascript" src="{{ URL::asset('js/main.js')}}"></script>
@@ -84,6 +205,7 @@
     </script>
 
     @yield('script')
-
+    @stack('scripts')
+    <div class="loading-overlay"></div>
 </body>
 </html>

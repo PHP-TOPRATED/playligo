@@ -77,7 +77,7 @@
 								<div class="post video-post small-post">
 									<div class="entry-header">
 										<div class="entry-thumbnail embed-responsive embed-responsive-16by9">
-											<a href="{{ url('public_playlist/popup/' . $pl->pl_id) }}" class="btn-modal"><img src="{{ $pl->pl_thumb_path or asset(config('playligo.video_thumb_default')) }}" width="100%"></a>
+											<a href="{{ url('public_playlist/popup/' . $pl->pl_slug) }}" class="btn-modal"><img src="{{ $pl->pl_thumb_path or asset(config('playligo.video_thumb_default')) }}" width="100%"></a>
 										</div>
 									</div>
 									<div class="post-content">

@@ -5,3 +5,10 @@ Homestead.yaml
 Homestead.json
 .env
 /.project
+/.idea
+composer.lock
+_ide_helper.php
+.phpstorm.meta.php
+/public/build
+/public/css/app.css
+/public/css/app.css.map

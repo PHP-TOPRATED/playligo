@@ -1,0 +1,6 @@
+.ytp-gradient-top, .ytp-gradient-bottom {
+    background-image: none !important;
+}
+body {
+    background-color: transparent !important;
+}

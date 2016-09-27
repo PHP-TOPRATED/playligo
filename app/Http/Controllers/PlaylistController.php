@@ -2,15 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
-use App\Http\Requests;
+use App\Http\Requests\EditPlaylist;
 use App\Playlist;
 use App\PlaylistVideo;
-use Auth;
-use Session;
-use App\Http\Requests\EditPlaylist;
 use App\Traits\ControllerTrait;
+use Auth;
+use Illuminate\Http\Request;
+use Session;
 
 class PlaylistController extends Controller
 {
@@ -21,13 +19,13 @@ class PlaylistController extends Controller
 
     public function __construct(Playlist $plRepo, PlaylistVideo $plvRepo)
     {
-      parent::__construct();
+        parent::__construct();
 
-      $this->plRepo = $plRepo;
+        $this->plRepo = $plRepo;
 
-      $this->plvRepo = $plvRepo;
-      
-      $this->parm['search'] = 'src_playlist';
+        $this->plvRepo = $plvRepo;
+
+        $this->parm['search'] = 'src_playlist';
     }
 
     public function index(Request $request)
@@ -39,28 +37,28 @@ class PlaylistController extends Controller
 
     public function adminList(Request $request)
     {
-      $search = session()->get($this->parm['search']);
+        $search = session()->get($this->parm['search']);
 
-      $playlists = $this->plRepo->select('playlists.*')->filter($search)->withOwner()->orderBy('pl_id', 'desc')->getPaginated();
+        $playlists = $this->plRepo->select('playlists.*')->filter($search)->withOwner()->orderBy('pl_id', 'desc')->getPaginated();
 
-      $filter = 'admin.playlist.filter';
+        $filter = 'admin.playlist.filter';
 
-      $total_record = $playlists->total();
+        $total_record = $playlists->total();
 
-      $page_title = trans('playlist.list');
+        $page_title = trans('playlist.list');
 
-      return view('admin.playlist.list', compact('playlists', 'filter', 'search', 'total_record', 'page_title'));
+        return view('admin.playlist.list', compact('playlists', 'filter', 'search', 'total_record', 'page_title'));
     }
 
     public function store(Request $request)
     {
         $playlist = $this->plRepo->create(['pl_user' => Auth::user()->id, 'pl_title' => $request->input('pl_title')]);
 
-        $this->plvRepo->massCreate($playlist->pl_id, Session::get('selected', []));
+        $this->plvRepo->massCreate($playlist->pl_id, Session::get('selected', []), Session::get('search_keys'));
 
         Session::forget('selected');
 
-        return redirect('playlist/successful/'.$playlist->pl_id)->with('status', trans('messages.playlist_create_successful'));
+        return redirect('playlist/successful/' . $playlist->pl_id)->with('status', trans('messages.playlist_create_successful'));
 
         // return back()->with('status', trans('messages.playlist_create_successful'));
     }
@@ -69,7 +67,7 @@ class PlaylistController extends Controller
     {
         $playlist = $this->plRepo->create(['pl_user' => Auth::user()->id, 'pl_title' => $request->input('pl_title')]);
 
-        $this->plvRepo->massCreate($playlist->pl_id, Session::get('selected', []));
+        $this->plvRepo->massCreate($playlist->pl_id, Session::get('selected', []), Session::get('search_keys'));
 
         Session::forget('selected');
 
@@ -107,7 +105,7 @@ class PlaylistController extends Controller
 
         $this->plRepo->find($request->input('pl_id'))->update($input);
 
-        return response()->json(['message'=> trans('messages.store_successful')]);
+        return response()->json(['message' => trans('messages.store_successful')]);
     }
 
     public function successful(Playlist $playlist)
@@ -120,11 +118,11 @@ class PlaylistController extends Controller
     }
 
     public function sortItem(Request $request)
-  	{
-          $input = $request->input();
+    {
+        $input = $request->input();
 
-  		    $this->plvRepo->reorder($input['id'], $input['pl_id'], $input['start_pos'], $input['end_pos']);
-  	}
+        $this->plvRepo->reorder($input['id'], $input['pl_id'], $input['start_pos'], $input['end_pos']);
+    }
 
     public function loadPlaylist(Playlist $playlist)
     {
@@ -134,10 +132,34 @@ class PlaylistController extends Controller
 
     public function preview(Playlist $playlist)
     {
-      $videos = $playlist->videos;
+        $videos = $playlist->videos;
 
-      return view('playlist.preview', compact('videos', 'playlist'));
-      // return view('playlist.preview', compact('playlist'));
+        return view('playlist.preview', compact('videos', 'playlist'));
+    }
+
+    /**
+     * Publish playlist
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function publish(Request $request)
+    {
+        $playlist = Playlist::findOrFail($request->input('id'));
+        $this->authorize('update', $playlist);
+        $status = true;
+        // playlist can not be unpublished
+        if ($playlist->isPublished()) {
+            return response()->json([
+                'message' => trans('messages.can_not_unpublish')
+            ]);
+        }
+        $playlist->update(['pl_status' => $status]);
+
+        return response()->json([
+            'message'  => trans('messages.publish_successful'),
+            'redirect' => route('public_playlist.view', ['pl_slug' => $playlist->pl_slug, 'share' => true])
+        ]);
     }
 
 }

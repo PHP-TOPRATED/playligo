@@ -25,7 +25,12 @@ class PlaylistVideoController extends Controller
     {
         $input = $request->input();
 
-        $created = $this->plvRepo->create(['plv_playlist' => array_get($input, 'pl_id'), 'plv_video_id' => array_get($input, 'id')]);
+        $created = $this->plvRepo->create([
+            'plv_playlist' => array_get($input, 'pl_id'),
+            'plv_video_id' => array_get($input, 'id'),
+            'keyword'      => array_get($input, 'keyword'),
+            'plv_order' => array_get($input, 'plv_order')
+        ]);
 
         return response()->json(['created' => $created]);
     }
@@ -38,9 +43,10 @@ class PlaylistVideoController extends Controller
 
     public function destroy(Request $request)
     {
-        $this->plvRepo->find($request->input('plv_id'))->delete();
+        $input = $request->input();
+        $this->plvRepo->where('plv_playlist', array_get($input, 'pl_id'))->where('plv_video_id', array_get($input, 'id'))->delete();
 
-        return back()->with('status', trans('messages.delete_successful'));
+        return response()->json(['status' => trans('messages.delete_successful')]);
     }
 
     public function instantDestroy(Request $request)

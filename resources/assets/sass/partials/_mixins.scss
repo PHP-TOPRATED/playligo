@@ -1,0 +1,202 @@
+// =============================================================================
+// String Replace
+// =============================================================================
+
+@function str-replace($string, $search, $replace: "") {
+  $index: str-index($string, $search);
+
+  @if $index {
+    @return str-slice($string, 1, $index - 1) + $replace + str-replace(str-slice($string, $index + str-length($search)), $search, $replace);
+  }
+
+  @return $string;
+}
+
+// =============================================================================
+// Font Face
+// =============================================================================
+
+@mixin font-face($name, $path, $weight: null, $style: null, $exts: eot woff ttf svg) {
+  $src: null;
+
+  $extmods: (
+          eot: "?",
+          svg: "#" + str-replace($name, " ", "_")
+  );
+
+  $formats: (
+          otf: "opentype",
+          ttf: "truetype"
+  );
+
+  @each $ext in $exts {
+    $extmod: if(map-has-key($extmods, $ext), $ext + map-get($extmods, $ext), $ext);
+    $format: if(map-has-key($formats, $ext), map-get($formats, $ext), $ext);
+    $src: append($src, url(quote($path + "." + $extmod)) format(quote($format)), comma);
+  }
+
+  @font-face {
+    font-family: quote($name);
+    font-style: $style;
+    font-weight: $weight;
+    src: $src;
+  }
+}
+// =============================================================================
+// Transition
+// =============================================================================
+@mixin transition($args...) {
+  -webkit-transition: $args;
+  -moz-transition: $args;
+  -ms-transition: $args;
+  -o-transition: $args;
+  transition: $args;
+}
+// =============================================================================
+// Opacity
+// =============================================================================
+@mixin opacity($opacity) {
+  opacity: $opacity;
+  $opacity-ie: $opacity * 100;
+  filter: alpha(opacity=$opacity-ie); //IE8
+}
+// =============================================================================
+// Box-shadow
+// =============================================================================
+@mixin box-shadow-none {
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
+@mixin box-shadow($top, $left, $blur, $color, $inset: false) {
+  @if $inset {
+    -webkit-box-shadow:inset $top $left $blur $color;
+    -moz-box-shadow:inset $top $left $blur $color;
+    box-shadow:inset $top $left $blur $color;
+  } @else {
+    -webkit-box-shadow: $top $left $blur $color;
+    -moz-box-shadow: $top $left $blur $color;
+    box-shadow: $top $left $blur $color;
+  }
+}
+// =============================================================================
+// Border-radius
+// =============================================================================
+@mixin border-radius($radius: 0.5em) {
+  -webkit-border-radius: $radius;
+  -moz-border-radius: $radius;
+  border-radius: $radius;
+}
+// =============================================================================
+// Gradient
+// =============================================================================
+@mixin verticalGradient($top, $bottom) {
+  background: $top;
+  background: -moz-linear-gradient(top, $top 0%, $bottom 100%);
+  background: -webkit-linear-gradient(top, $top 0%, $bottom 100%);
+  background: linear-gradient(to bottom, $top 0%, $bottom 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='$top', endColorstr='$bottom',GradientType=0 );
+}
+@mixin horizontalGradient($left, $right) {
+  background: $left;
+  background: -moz-linear-gradient(left, $left 0%, $right 100%);
+  background: -webkit-linear-gradient(left, $left 0%, $right 100%);
+  background: linear-gradient(to right, $left 0%, $right 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='$left', endColorstr='$right',GradientType=1 );
+}
+@mixin radialGradient($start, $end, $position) {
+  background: $start;
+  background: -moz-radial-gradient($position, ellipse cover, $start, $end);
+  background: -webkit-radial-gradient($position, ellipse cover, $start, $end);
+  background: radial-gradient(ellipse at $position, $start, $end);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='$start', endColorstr='$end',GradientType=1 );
+}
+// =============================================================================
+// Icon sprite
+// =============================================================================
+@mixin icon-sprite($x: 0, $y: 0, $width: 0, $height: 0) {
+  background-position: $x $y;
+  width: $width;
+  height: $height;
+}
+
+// =============================================================================
+// Media queries
+// =============================================================================
+$tablet-width: 768px;
+$desktop-width: 1024px;
+
+@mixin mobile {
+  @media (max-width: #{$tablet-width - 1px}) {
+    @content;
+  }
+}
+
+@mixin tablet {
+  @media (min-width: #{$tablet-width}) and (max-width: #{$desktop-width - 1px}) {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @media (min-width: #{$desktop-width}) {
+    @content;
+  }
+}
+// =============================================================================
+// Bootstrap Media queries
+// =============================================================================
+$screen-xs: 480px;
+$screen-sm: 768px;
+$screen-md: 992px;
+$screen-lg: 1200px;
+
+@mixin screen-xs {
+  @media (min-width: #{$screen-xs - 1px}) {
+    @content;
+  }
+}
+@mixin screen-xs-max {
+  @media (max-width: #{$screen-xs - 1px}) {
+    @content;
+  }
+}
+
+@mixin screen-sm {
+  @media (min-width: #{$screen-sm}) {
+    @content;
+  }
+}
+@mixin screen-sm-max {
+  @media (max-width: #{$screen-sm}) {
+    @content;
+  }
+}
+
+@mixin screen-md {
+  @media (min-width: #{$screen-md}) {
+    @content;
+  }
+}
+@mixin screen-md-only {
+  @media (min-width: #{$screen-md}) and (max-width: #{$screen-lg - 1}) {
+    @content;
+  }
+}
+@mixin screen-md-max {
+  @media (max-width: #{$screen-md}) {
+    @content;
+  }
+}
+
+@mixin screen-lg {
+  @media (min-width: #{$screen-lg}) {
+    @content;
+  }
+}
+
+@mixin screen-lg-max {
+  @media (max-width: #{$screen-lg}) {
+    @content;
+  }
+}

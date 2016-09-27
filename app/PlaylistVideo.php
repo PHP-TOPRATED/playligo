@@ -7,17 +7,43 @@ use DB;
 
 class PlaylistVideo extends Model
 {
-    protected $table = 'playlist_videos';
+    protected $table      = 'playlist_videos';
     protected $primaryKey = 'plv_id';
-    protected $fillable = ['plv_playlist', 'plv_video_id', 'plv_status', 'plv_order', 'plv_snippet'];
+    protected $fillable   = [
+        'plv_playlist',
+        'plv_video_id',
+        'plv_status',
+        'keyword',
+        'plv_order',
+        'plv_snippet'
+    ];
 
-    public function massCreate($playlist_id, $videos)
+    public static function boot()
+    {
+        PlaylistVideo::creating(function ($post) {
+//          $post->plv_order = $post->lastOrder($post['plv_playlist']);
+
+            $post->plv_snippet = VideoCache::find($post->plv_video_id)->vc_snippet;
+        });
+
+        PlaylistVideo::saved(function ($post) {
+            Playlist::find($post->plv_playlist)->updateThumbPath();
+        });
+
+        PlaylistVideo::deleted(function ($post) {
+            Playlist::find($post->plv_playlist)->updateThumbPath();
+        });
+
+    }
+
+    public function massCreate($playlist_id, $videos, $keywords)
     {
         foreach ($videos as $key => $video_id) {
             $this->create(['plv_playlist' => $playlist_id,
-                            'plv_video_id' => $video_id,
-                            // 'plv_order' => $key
-                          ]);
+                           'plv_video_id' => $video_id,
+                           'plv_order'    => 1,
+                           'keyword'      => $keywords[$key]['value']
+            ]);
         }
     }
 
@@ -45,23 +71,5 @@ class PlaylistVideo extends Model
     private function lastOrder($pl_id)
     {
         return $this->where('plv_playlist', '=', $pl_id)->max('plv_order') + 1;
-    }
-
-    public static function boot()
-    {
-        PlaylistVideo::creating(function ($post) {
-          $post->plv_order = $post->lastOrder($post['plv_playlist']);
-
-          $post->plv_snippet = VideoCache::find($post->plv_video_id)->vc_snippet;
-        });
-
-        PlaylistVideo::saved(function ($post) {
-          Playlist::find($post->plv_playlist)->updateThumbPath();
-        });
-
-        PlaylistVideo::deleted(function ($post) {
-          Playlist::find($post->plv_playlist)->updateThumbPath();
-        });
-
     }
 }

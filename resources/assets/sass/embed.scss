@@ -1,0 +1,152 @@
+@import "services/reset";
+@import "embed/buttons";
+@import "embed/screens";
+@import "font-awesome/font-awesome";
+
+* {
+  outline: none;
+  text-decoration: none;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  font-smooth: antialiased;
+  -webkit-font-smooth: antialiased;
+  -moz-osx-font-smoothing: antialiased;
+}
+
+.clearfix {
+  &:before,
+  &:after {
+    content: " ";
+    display: table;
+  }
+  &:after {
+    clear: both;
+  }
+}
+
+body {
+  font: 12px 'Signika Negative', sans-serif;
+  color: #fff;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  position: absolute;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  margin: 0;
+  padding: 0;
+  background-color: #FFFFFF;
+}
+
+header {
+  padding: 1px;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  .logo {
+    float: left;
+    img {
+      height: 28px;
+    }
+  }
+  .btn {
+    font-size: 14px;
+    float: right;
+    text-transform: capitalize;
+  }
+}
+
+main {
+  width: 100%;
+  height: 100%;
+  padding-top: 30px;
+  padding-bottom: 30px;
+
+  .link {
+    width: 100%;
+    background-color: #000000;
+    text-align: center;
+    padding: 2px;
+    font-size: 16px;
+    a {
+      color: #FFFFFF;
+      text-decoration: none;
+    }
+  }
+
+  #player {
+    width: 100%;
+    height: 100%;
+    padding-bottom: 24px;
+  }
+}
+
+footer {
+  position: absolute;
+  bottom: 0px;
+  left: 0;
+  right: 0;
+}
+
+.playlist {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.keywords-tabs {
+  padding: 1px 35px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  .nav-tabs {
+    li {
+      float: left;
+      position: relative;
+      display: block;
+      text-align: center;
+      a {
+        color: #8dc63f;
+        margin: 2px 5px;
+        border-radius: 4px;
+        border: 2px solid #8dc63f;
+        padding: 5px;
+        line-height: 1;
+        display: block;
+        font-size: 14px;
+      }
+      &.active {
+        a {
+          background-color: #8dc63f;
+          color: #FFFFFF;
+        }
+      }
+    }
+  }
+}
+
+.lSSlideOuter {
+  z-index: 2;
+}
+
+.container {
+  text-align: center;
+  display: table-cell;
+  vertical-align: middle;
+  .content {
+    text-align: center;
+    display: inline-block;
+    .title {
+      font-size: 72px;
+      margin-bottom: 40px;
+      color: #B0BEC5;
+    }
+  }
+}
+
+.table {
+  display: table;
+  height: 100%;
+  width: 100%;
+}

@@ -19,6 +19,7 @@ trait ControllerTrait
             $request->session()->forget($this->parm['search']);
 
             $message = trans('form.clear_search_content');
+            return response()->json(['cleared' => true]);
         }
 
         return back();

@@ -14,9 +14,11 @@
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-        <li class="active"><a href="{{ url('/admin/user') }}">Users</a></li>
-        <li><a href="{{ url('/admin/playlist') }}">Playlists</a></li>
-        <li><a href="{{ url('/admin/poll') }}">Polls</a></li>
+        <li class="{{ Request::segment(2) == 'user' ? 'active' : '' }}"><a href="{{ url('/admin/user') }}">Users</a></li>
+        <li class="{{ Request::segment(2) == 'keywords' ? 'active' : '' }}"><a href="{{ url('/admin/keywords') }}">Keywords</a></li>
+        <li class="{{ Request::segment(2) == 'playlist' ? 'active' : '' }}"><a href="{{ url('/admin/playlist') }}">Playlists</a></li>
+        <li class="{{ Request::segment(2) == 'poll' ? 'active' : '' }}"><a href="{{ url('/admin/poll') }}">Polls</a></li>
+        <li class="{{ Request::segment(2) == 'feedbacks' ? 'active' : '' }}"><a href="{{ url('/admin/feedbacks') }}">Feedback</a></li>
         <!-- <li><a href="#">Link</a></li>
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>

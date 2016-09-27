@@ -20,7 +20,7 @@
               <li><a href="{{ url('/register') }}">Register</a></li>
           @else
               <li><a href="{{ url('/playlist') }}">My Playlists</a></li>
-              <li><a href="{{ url('/poll') }}">My Polls</a></li>
+              {{--<li><a href="{{ url('/poll') }}">My Polls</a></li>--}}
               @if (auth()->user()->hasRole('admin'))
               <li><a href="{{ url('/admin') }}"><i class="fa fa-gears"></i> Admin</a></li>
               @endif

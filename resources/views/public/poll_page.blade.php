@@ -29,7 +29,7 @@
             <div class="row">
               <div class="col-md-3">
                 <div class="play_image_container">
-                  <a href="{{ url('/public_playlist/popup/' . $playlist->pl_id) }}" class="btn-modal"><img src="{{ $playlist->pl_thumb_path or asset(config('playligo.video_thumb_default')) }}" class="img-rounded" width="100%"></a>
+                  <a href="{{ url('/public_playlist/popup/' . $playlist->pl_slug) }}" class="btn-modal"><img src="{{ $playlist->pl_thumb_path or asset(config('playligo.video_thumb_default')) }}" class="img-rounded" width="100%"></a>
                   <div class="play_button"><i class="fa fa-play-circle-o"></i></div>
                 </div>
               </div>

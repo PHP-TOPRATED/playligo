@@ -17,7 +17,7 @@
           </div>
           <div class="col-md-3 col-sm-3 col-xs-3">{{ FormError::rating('plRating', 0) }}</div>
           <div class="col-md-1 col-sm-1 col-xs-1">
-            {{ Form::button('Rate', ['type'=>'button', 'class'=>'btn-xs btn-primary btn ratingPopUp_open']) }}
+            {{ Form::button('Rate', ['type'=>'button', 'class'=>'btn-xs btn-success btn ratingPopUp_open']) }}
             @if(auth()->check())
             <div id="ratingPopUp" class="well text-center">
               Enter your rating

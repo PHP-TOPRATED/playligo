@@ -1,0 +1,28 @@
+.pac-container {
+  font-family: 'Signika Negative', sans-serif;
+  color: #555;
+  background: #fff;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  border: none;
+  opacity: 0.8;
+  filter: alpha(opacity=80);
+  @include box-shadow-none;
+  &:after {
+    content: none;
+  }
+}
+
+.pac-icon {
+  display: none;
+}
+
+.pac-item {
+  font-size: 14px;
+  &:hover {
+    cursor: pointer;
+  }
+  //&:first-child {
+  //  border-top: 0;
+  //}
+}

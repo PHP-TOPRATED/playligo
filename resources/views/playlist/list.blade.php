@@ -30,14 +30,20 @@
 					<div>
 						<span class="label2 label-success"><i class="fa fa-eye"></i> {{ $pl->pl_view }} views</span>
 						<span class="label2 label-success"><i class="fa fa-star"></i> {{ $pl->pl_rating }}</span>
-						<span class="label2 label-success"><i class="fa fa-clock-o"></i> {{Carbon::parse($pl->created_at)->diffForHumans()}}</span>						
+						<span class="label2 label-success"><i class="fa fa-clock-o"></i> {{Carbon::parse($pl->created_at)->diffForHumans()}}</span>
 					</div>
 				</td>
         <td class="action_column">
-            <a href="{{ url('playlist/edit/' . $pl->pl_id) }}" title="{{ trans('form.action_edit') }}">{{ Form::button('<i class="fa fa-edit"></i> '.trans('form.btn_edit'), ['class'=>'btn btn-primary btn-small']) }}</a>
-            <a href="{{ url('playlist/delete/' . $pl->pl_id) }}" title="{{ trans('form.action_delete') }}" class="btn-modal">{{ Form::button('<i class="fa fa-trash"></i> '.trans('form.btn_delete'), ['class'=>'btn btn-primary btn-small']) }}</a>
-						<a href="{{ url('poll/add/' . $pl->pl_id) }}" title="{{ trans('form.action_add_poll') }}" class="btn-modal">{{ Form::button('<i class="fa fa-plus"></i> '.trans('form.btn_add_to_poll_alt'), ['class'=>'btn btn-primary btn-small']) }}</a>
-						<a href="{{ url('public_playlist/' . $pl->pl_id) }}" title="{{ trans('form.action_view') }}">{{ Form::button('<i class="fa fa-eye"></i> '.trans('form.btn_view_live'), ['class'=>'btn btn-primary btn-small']) }}</a>
+            <a href="{{ url('playlist/edit/' . $pl->pl_id) }}" title="{{ trans('form.action_edit') }}">{{ Form::button('<i class="fa fa-edit"></i> '.trans('form.btn_edit'), ['class'=>'btn btn-success btn-small']) }}</a>
+            <a href="{{ url('playlist/delete/' . $pl->pl_id) }}" title="{{ trans('form.action_delete') }}" class="btn-modal">{{ Form::button('<i class="fa fa-trash"></i> '.trans('form.btn_delete'), ['class'=>'btn btn-success btn-small']) }}</a>
+			{{--<a href="{{ url('poll/add/' . $pl->pl_id) }}" title="{{ trans('form.action_add_poll') }}" class="btn-modal">{{ Form::button('<i class="fa fa-plus"></i> '.trans('form.btn_add_to_poll_alt'), ['class'=>'btn btn-success btn-small']) }}</a>--}}
+			@if (! $pl->isPublished())
+				{{ Form::button(trans('form.btn_publish'), ['type'=>'button', 'class'=>'btn btn-success btn-small btn-publish', 'data-pl_id' => $pl->pl_id, 'data-url' => route('playlist.publish'), 'data-title' => (!empty($pl->pl_title)) ? 'true' : 'false', 'data-title_url' => url('playlist/edit')]) }}
+			@else
+				<a target="_blank" href="{{ route('public_playlist.view', ['playlist' => $pl->pl_slug]) }}">
+					{{ Form::button(trans('form.btn_view_live'), ['class'=>'btn btn-success btn-small']) }}
+				</a>
+			@endif
         </td>
 			</tr>
 			@endforeach

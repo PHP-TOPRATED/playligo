@@ -24,13 +24,13 @@
 <div class="text-center home-content">
   <div class="home-content-inner">
     <div class="section"><a href="#" class="play"><i class="fa semi-transparent fa-lg fa-play-circle"></i></a></div>
-    <h1>Visualize your travel itinerary</h1>
-    <h2 style="margin-bottom: 40px">With Playligo's inspirational video playlist tool</h2>
+    <h1>Visualize Your Travel</h1>
+    <h2 style="margin-bottom: 40px">Discover &amp; get a real sense of any destination!</h2>
     <div class="section">
       <div class="row">
           <div class="col-md-10 col-md-offset-1">
-            <a href="{{ url('search') }}#discover">{{ Form::button(trans('form.btn_discover'), ['class'=>'btn-transparent-hero']) }}</a>&nbsp;&nbsp;&nbsp;
-            <a href="{{ url('search') }}">{{ Form::button(trans('form.btn_search_hero'), ['class'=>'btn-transparent-hero']) }}</a>
+            <a href="{{ url('search') }}">{{ Form::button(trans('form.btn_visualize'), ['class'=>'btn-transparent-hero']) }}</a>&nbsp;&nbsp;&nbsp;
+            <a href="{{ url('public_playlist') }}">{{ Form::button(trans('form.btn_playlist'), ['class'=>'btn-transparent-hero']) }}</a>
           </div>
       </div>
     </div>

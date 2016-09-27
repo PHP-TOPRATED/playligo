@@ -17,6 +17,6 @@ return array(
                                   8 => ['local transport', 'farm stay', 'zoo', 'park'],
                                   ],
     'key_quota'           => 5,
-    'user_key_weight'     => 8,
+    'user_key_weight'     => 4,
     'generic_key_weight'  => 4,
 );

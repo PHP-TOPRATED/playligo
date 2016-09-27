@@ -48,6 +48,11 @@ class User extends Authenticatable
       return $this->hasMany('App\Poll', 'pol_user', 'id');
     }
 
+    public function feedback()
+    {
+        return $this->hasOne(Feedback::class);
+    }
+
     public function stat()
     {
       $playlist_count = $this->playlists()->count();

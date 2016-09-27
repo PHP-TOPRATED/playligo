@@ -105,7 +105,14 @@ class AuthController extends Controller
 
         Auth::guard($this->getGuard())->login($user);
 
-        return response()->json(['redirect' => $this->redirectPath(), 'message'=> 'Successful sign up! Signing in...']);
+        $redirect = '/';
+        if (session()->has('last_page')) {
+            $redirect = session()->pull('last_page');
+        } else {
+            $redirect = $this->redirectPath();
+        }
+
+        return response()->json(['redirect' => $redirect, 'message'=> 'Successful sign up! Signing in...']);
 
         // return redirect($this->redirectPath());
     }
@@ -219,8 +226,15 @@ class AuthController extends Controller
             return $this->authenticated($request, Auth::guard($this->getGuard())->user());
         }
 
+        $redirect = '/';
+        if (session()->has('last_page')) {
+            $redirect = session()->pull('last_page');
+        } else {
+            $redirect = $this->redirectPath();
+        }
+
         if ($request->ajax() || $request->wantsJson()) {
-          return response()->json(['redirect' => $this->redirectPath(), 'message'=> 'Signing in...']);
+          return response()->json(['redirect' => $redirect, 'message'=> 'Signing in...']);
         } else {
           return redirect()->intended($this->redirectPath());
         }
@@ -269,6 +283,19 @@ class AuthController extends Controller
         }
 
         return $this->sendFailedLoginResponse($request);
+    }
+
+    /**
+     * Log the user out of the application.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function logout()
+    {
+        Auth::guard($this->getGuard())->logout();
+        \Session::flush();
+
+        return redirect(property_exists($this, 'redirectAfterLogout') ? $this->redirectAfterLogout : '/');
     }
 
 }
