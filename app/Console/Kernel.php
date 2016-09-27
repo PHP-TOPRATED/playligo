@@ -13,7 +13,8 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        Commands\GenPlaylistsUniqueId::class
+        Commands\GenPlaylistsUniqueId::class,
+        Commands\PublishPlaylists::class
     ];
 
     /**
