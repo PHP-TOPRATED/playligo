@@ -66,7 +66,7 @@ Route::group(['middleware' => 'web'], function () {
     Route::get('/search', 'SearchController@index');
     Route::get('/search/get_by_keyword', 'SearchController@getByKeyword');
     Route::get('/search_keywords', 'SearchController@searchKeywords');
-    Route::get('/new_search_keywords', 'SearchController@displaySearchKeywords');
+    Route::get('/new_search_keywords', 'SearchController@displaySearchKeywords')->name('new_search_keywords');
     Route::get('/places_of_interests', 'SearchController@getPlacesOfInterests');
     Route::get('/tours', 'SearchController@getTours');
     Route::get('/autogen', 'SearchController@autoGen');

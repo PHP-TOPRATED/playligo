@@ -18,7 +18,7 @@
                             @foreach($city_set as $city)
                                 <?php $size = ($city->cit_hotels / $divider) <= 3 ? $city->cit_hotels / $divider : 2.5 ?>
                                 <?php $size = 3; ?>
-                                <li> <a href="{{ url('/new_search_keywords?location=' . $city->cit_name . ", " . $city->coun_name) }}" data-weight="{{ $size*10 }}">{{"$city->cit_name"}}, {{ "$city->coun_name" }}</a> </li>
+                                <li> <a href="{{ url('/search_keywords?location=' . $city->cit_name . ", " . $city->coun_name) }}" data-weight="{{ $size*10 }}">{{"$city->cit_name"}}, {{ "$city->coun_name" }}</a> </li>
                             @endforeach
                         </ul>
                     </div>

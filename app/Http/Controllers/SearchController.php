@@ -47,9 +47,9 @@ class SearchController extends Controller
         session()->put('search_location', ucwords($request->input('location')));
 
         if ($request->ajax() || $request->wantsJson()) {
-            return response()->json(['redirect' => url('new_search_keywords')]);
+            return response()->json(['redirect' => route('new_search_keywords', ['location' => ucwords($request->input('location'))])]);
         } else {
-            return redirect('new_search_keywords');
+            return redirect(route('new_search_keywords', ['location' => ucwords($request->input('location'))]));
         }
     }
 
