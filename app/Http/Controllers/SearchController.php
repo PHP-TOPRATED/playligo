@@ -53,11 +53,12 @@ class SearchController extends Controller
         }
     }
 
-    public function displaySearchKeywords(Request $request)
+    public function displaySearchKeywords(SearchLocation $request)
     {
-        if (!($location = session()->get('search_location'))) {
+        if (!($location = $request->get('location'))) {
             return redirect(url('search'));
         }
+        session()->put('search_location', ucwords($location));
 
         $page_title = trans('meta_data.search_funnel_title') . ' | ' . $location;
 

@@ -70,7 +70,6 @@ Route::group(['middleware' => 'web'], function () {
     Route::get('/places_of_interests', 'SearchController@getPlacesOfInterests');
     Route::get('/tours', 'SearchController@getTours');
     Route::get('/autogen', 'SearchController@autoGen');
-    Route::get('/autogen', 'SearchController@autoGen');
     Route::get('/edit_playlist', 'SearchController@editDemoPlaylist')->name('playlist.demo');
     Route::post('/edit_playlist', 'SearchController@forgetDemoPlaylist');
     Route::get('/suggest_location', 'SearchController@suggestRegion');
