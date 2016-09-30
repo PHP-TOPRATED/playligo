@@ -8,7 +8,7 @@
                 <div class="row">
                     <div class="col-md-6 col-md-offset-3 col-sm-10 col-sm-offset-1 col-xs-10 col-xs-offset-1">
                         <h1>{!! trans('form.enter_first_destination') !!}</h1>
-                        {{ Form::open(['url'=>'new_search_keywords', 'method'=>'get', 'class'=> auth()->check() ? 'submit-ajax-get' : '']) }}
+                        {{ Form::open(['url'=>'new_search_keywords', 'method'=>'get']) }}
                         <div class="input-group">
                             {{ Form::text('location', old('location'), ['class'=>'form-control', 'placeholder'=> trans('form.eg_destination'), 'id' => 'location']) }}
                             <span class="input-group-btn">
