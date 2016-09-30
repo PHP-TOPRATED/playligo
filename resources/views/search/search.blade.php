@@ -190,6 +190,9 @@
     <script async defer type="text/javascript"
             src="https://maps.googleapis.com/maps/api/js?key={{ config('googlemaps.key') }}&libraries=places&callback=initialize"></script>
     <script>
+        $(document).delegate('#location', 'pageinit', function () {
+            initialize();
+        });
         function initialize() {
             var input = document.getElementById('location');
             var autocomplete = new google.maps.places.Autocomplete(input);

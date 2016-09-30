@@ -41,7 +41,7 @@
                                         ])
                                     </div>
                                 </div>
-                                <div class="tab-pane" id="tab-interests">
+                                <div class="tab-pane" id="tab-interests" data-role="page">
                                     <div id="interests-hidden" style="display: none;"></div>
                                     <div class="keywords" id="interests">
                                     </div>
@@ -135,6 +135,9 @@
             $('#tags').tagEditor('addTag', tempValue);
             $(this).closest('.keyword').hide('fast');
             cutKeywords[tempValue.substring(1, tempValue.length)] = $(this).closest('.keyword').data('keyword');
+        });
+        $(document).delegate('#tab-interests', 'pageinit', function () {
+            initialize();
         });
         function initialize() {
             $('#tab-interests .keywords').hide();
