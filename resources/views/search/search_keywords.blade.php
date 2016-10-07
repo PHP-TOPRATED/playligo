@@ -25,12 +25,15 @@
                                                                                                aria-controls="tab-interests"
                                                                                                role="tab"
                                                                                                data-toggle="tab">Places
-                                        of Interest</a></li>
+                                                                                                                 of
+                                                                                                                 Interest</a>
+                                </li>
                                 <li role="presentation" class="col-md-4 col-sm-6 col-xs-12"><a href="#tab-tours"
                                                                                                aria-controls="tab-tours"
                                                                                                role="tab"
                                                                                                data-toggle="tab">Tours &
-                                        Activities</a></li>
+                                                                                                                 Activities</a>
+                                </li>
                             </ul>
                             <div class="tab-content">
                                 <div class="tab-pane active" id="tab-general">
@@ -59,6 +62,7 @@
                             </div>
                         </div>
                         {{ Form::hidden('location', $location) }}
+                        {{ Form::hidden('coordinates', null) }}
                         {{ Form::button(trans('form.btn_start_visualizing'), ['type'=>'submit', 'class'=>'btn btn-primary col-xs-10 col-center', 'id' => 'keywords-submit']) }}
                         {{ Form::close() }}
                     </div>
@@ -151,12 +155,16 @@
                 if (status === 'OK') {
                     var lat = results[0].geometry.location.lat();
                     var lng = results[0].geometry.location.lng();
+                    setCoordinates(lat, lng);
                     getTours(lat, lng);
                     getPlacesOfInterest(lat, lng);
                 } else {
                     console.error('Geocode was not successful for the following reason: ' + status);
                 }
             });
+        }
+        function setCoordinates(lat, lng) {
+            $('input[name="coordinates"]').val(lat + ',' + lng);
         }
         function getPlacesOfInterest(lat, lng) {
             var requestPoint = {

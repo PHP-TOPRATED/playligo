@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\EditPlaylist;
+use App\LogEmail;
 use App\Playlist;
 use App\PlaylistVideo;
 use App\Traits\ControllerTrait;
@@ -154,6 +155,11 @@ class PlaylistController extends Controller
                 'message' => trans('messages.can_not_unpublish')
             ]);
         }
+        // Email notification
+        $email = new LogEmail;
+
+        $email->sendNewPlaylist($playlist);
+
         $playlist->update(['pl_status' => $status]);
 
         return response()->json([

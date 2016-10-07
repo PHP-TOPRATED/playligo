@@ -12,5 +12,6 @@ return [
     'description' => 'Description',
     'image'       => 'Icon',
     'weight'      => 'Keyword weight',
+    'no_videos'   => 'There are no videos for this keyword',
 
 ];

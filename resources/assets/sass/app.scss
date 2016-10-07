@@ -180,7 +180,6 @@ div.sharing-container {
 }
 
 .section-title {
-  margin-bottom: 30px;
   img {
     width: 50px;
     border-radius: 50%;
@@ -272,6 +271,14 @@ div.description_content {
 #admin_panel .navbar {
   margin-bottom: 20px;
   border: 0px;
+}
+
+.homepage .navbar-brand {
+  padding: 11px 12px;
+  height: 50px;
+  img {
+    height: 31px;
+  }
 }
 
 #admin_panel .navbar-brand {
@@ -452,7 +459,7 @@ h5 .section-title {
 
 .search-container .navbar-nav a {
   // text-shadow: 1px 1px #999999;
-  color: #808080;
+  color: #333;
 }
 
 .search-container a {
@@ -649,9 +656,10 @@ h5 .section-title {
   text-align: center;
 }
 
-.post {
-  // margin-top: 0px;
-  // margin-bottom: 10px;
+.playlist-item {
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .voter_description {
@@ -804,6 +812,10 @@ h5 .section-title {
 }
 
 @media screen and (min-width: 768px) {
+  .navbar-nav > li > a {
+    padding-top: 15px;
+    padding-bottom: 15px;
+  }
   .navbar-right {
     margin-right: 0px;
   }

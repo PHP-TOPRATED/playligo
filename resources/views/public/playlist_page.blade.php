@@ -42,6 +42,7 @@
                 <div class="keywords-tabs">
                     <ul class="nav nav-tabs row playlist-keywords" role="tablist">
                         @foreach ($playlist->keys as $i => $key)
+                            {{--{{ dd($key) }}--}}
                             <li role="presentation" class="{{ $i === 0 ? 'active ' : '' }} text-center">
                                 <a href=""
                                    class="keyword-tab green"
@@ -70,7 +71,6 @@
             </div>
             <div class="col-md-6">
                 <div class="section playback_queue">
-                    {{--<h5 class="section-title title">Playlist</h5>--}}
                     <ul class="list-group playlist-scroll">
                         @foreach ($videos as $key => $video)
                             <?php $video_snippet = unserialize($video->plv_snippet) ?>
@@ -105,7 +105,9 @@
         {{--data-width="100%"></div>--}}
         {{--</div>--}}
         {{--</div>--}}
-
+        <div class="section white-background">
+            <div id="gyg-widget"></div>
+        </div>
         <div class="section white-background">
             <h5 class="section-title title">@lang('form.playlist_latest')</h5>
             <div class="scroll">
@@ -237,7 +239,10 @@
     <script src="https://cdn.rawgit.com/vast-engineering/jquery-popup-overlay/1.7.13/jquery.popupoverlay.js"></script>
     <script src="{{ asset('js/jquery-scrolltofixed.js') }}"></script>
     <script src="{{ asset('js/jquery.barrating.min.js') }}"></script>
-
+    @if($playlist->coordinates)
+        <script async defer src="//widget.getyourguide.com/v2/core.js"
+                onload="GYG.Widget(document.getElementById('gyg-widget'),{'currency':'USD','lat':'{{$playlist->coordinates['lat']}}','lon':'{{$playlist->coordinates['lng']}}','localeCode':'en-US','numberOfItems':'4','partnerId':'HUBIIMY','type':'tour'});"></script>
+    @endif
     <script type="text/javascript">
         $(document).ready(function () {
             var $wrapper = $('#content-wrapper');
@@ -338,7 +343,7 @@
         var player;
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('player', {
-                playerVars: {'autoplay': 1, 'controls': 2, 'showinfo': 1},
+                playerVars: {'autoplay': 0, 'controls': 2, 'showinfo': 1},
                 events: {
                     'onReady': onPlayerReady,
                     'onStateChange': onPlayerStateChange
@@ -354,7 +359,9 @@
                     @endforeach
             var videos = {!! json_encode($vid) !!};
             event.target.loadPlaylist(videos);
-            event.target.playVideo();
+            setTimeout(function () {
+                player.pauseVideo();
+            }, 900);
         }
 
         var done = false;

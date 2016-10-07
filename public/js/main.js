@@ -25,7 +25,7 @@ jQuery(function ($) {
 	/*==============================================================*/
     // # sticky-nav
     /*==============================================================*/
-	(function () {
+/*	(function () {
 		var windowWidth = $(window).width();
 		if(windowWidth > 1000 ){
         $(window).scroll (function () {
@@ -54,7 +54,7 @@ jQuery(function ($) {
 			$('.homepage #menubar, .homepage-two.fixed-nav #navigation').removeClass('container-fluid')
 		};
 
-    }());
+    }());*/
 
 
 

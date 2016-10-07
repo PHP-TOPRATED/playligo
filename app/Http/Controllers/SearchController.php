@@ -6,7 +6,6 @@ use App\City;
 use App\Helpers\Helper;
 use App\Http\Requests\SearchLocation;
 use App\Keyword;
-use App\LogEmail;
 use App\Playlist;
 use App\PlaylistKey;
 use App\PlaylistVideo;
@@ -33,13 +32,15 @@ class SearchController extends Controller
 
     public function index()
     {
-        $page_title = trans('meta_data.search_funnel_title');
+        $page_title = trans('meta_data.search_title');
 
-        $page_desc = trans('meta_data.search_funnel_desc');
+        $og_title = trans('meta_data.search_og_title');
+
+        $page_desc = trans('meta_data.search_desc');
 
         $page_img = asset('img/playligo_home_background_glacier.jpg');
 
-        return view('search.search', compact('page_title', 'page_desc', 'page_img'));
+        return view('search.search', compact('page_title', 'page_desc', 'page_img', 'og_title'));
     }
 
     public function searchKeywords(SearchLocation $request)
@@ -60,15 +61,16 @@ class SearchController extends Controller
         }
         session()->put('search_location', ucwords($location));
 
-        $page_title = trans('meta_data.search_funnel_title') . ' | ' . $location;
+        $page_title = trans('meta_data.search_title') . ' | ' . $location;
 
-        $page_desc = trans('meta_data.search_funnel_desc');
+        $og_title = trans('meta_data.search_og_title') . ' | ' . $location;
+
+        $page_desc = trans('meta_data.search_desc');
 
         $page_img = asset('img/playligo_home_background_glacier.jpg');
 
         $general_keywords = Keyword::orderBy('weight', 'desc')->get();
 
-        $split = false;
         $split = false;
 
         $default = [
@@ -79,6 +81,7 @@ class SearchController extends Controller
         return view('search.search_keywords', compact(
             'location',
             'page_title',
+            'og_title',
             'page_desc',
             'page_img',
             'default',
@@ -171,10 +174,13 @@ class SearchController extends Controller
         $keys = explode(",", array_get($input, 'search_keys'));
 
         $location = array_get($input, 'location');
+        $coordinates = array_get($input, 'coordinates');
 
         $resultsets = $this->fetchVideos($location, $keys, false, 0.25, true, $keys_used);
         session()->put('search_keys', $keys_used);
         session()->put('video_meta', $resultsets);
+        session()->put('coordinates', $coordinates);
+        session()->put('show_tutorial_message', true);
 
         $this->autoGenPlaylist($resultsets);
 
@@ -185,21 +191,33 @@ class SearchController extends Controller
             do {
                 $pl_slug = Helper::generateRandomString();
             } while (Playlist::wherePlSlug($pl_slug)->count() != 0);
+
+            $coordinates = explode(',', $coordinates);
+            $coordinates['lat'] = $coordinates[0];
+            $coordinates['lng'] = $coordinates[1];
+
             // Create playlist
-            $playlist = Playlist::create(['pl_user' => Auth::user()->id, 'pl_title' => '', 'pl_location' => $location, 'pl_slug' => $pl_slug]);
+            $playlist = Playlist::create([
+                'pl_user'     => Auth::user()->id,
+                'pl_title'    => '',
+                'pl_location' => $location,
+                'pl_slug'     => $pl_slug,
+                'coordinates' => $coordinates
+            ]);
 
             // Create playlist videos
             $plv = new PlaylistVideo;
             $plv->massCreate($playlist->pl_id, session()->get('selected', []), session()->get('search_keys'));
 
             foreach ($keys_used as $key_used) {
-                PlaylistKey::create(['plk_playlist' => $playlist->pl_id, 'plk_key' => $key_used['value'], 'plk_weight' => $key_used['weight'], 'plk_next_token' => $key_used['next_token']]);
+                PlaylistKey::create([
+                    'plk_playlist'   => $playlist->pl_id,
+                    'plk_key'        => $key_used['value'],
+                    'plk_weight'     => $key_used['weight'],
+                    'plk_next_token' => $key_used['next_token']
+                ]);
             }
 
-            // Email notification
-            $email = new LogEmail;
-
-            $email->sendNewPlaylist($playlist);
             $redirect = url('playlist/edit/' . $playlist->pl_id);
         } else {
             session()->put('create_from_demo', true);
@@ -239,23 +257,17 @@ class SearchController extends Controller
                 'part'          => 'id, snippet',
                 'videoDuration' => 'short',
                 'safeSearch'    => 'strict',
-                // 'order' => 'rating',
                 'maxResults'    => $max_result
             ];
 
             if ($more) {
                 $params['pageToken'] = session()->get('search_keywords.' . $key);
-                // $info = session()->get('search_keywords.' . $key);
-                // $params['pageToken'] = $info['nextPageToken'];
             }
 
             $key_result = Youtube::searchAdvanced($params, true);
 
-            // session()->put('search_keywords.' . $key, $key_result['info']);
             session()->put('search_keywords.' . $key, $key_result['info']['nextPageToken']);
 
-            // return array_values($key_result['results']);
-            // return array_values($key_result);
             return $key_result;
         }
     }
@@ -272,6 +284,7 @@ class SearchController extends Controller
                 }
             }
         }
+
         return $playlist;
     }
 
@@ -293,6 +306,7 @@ class SearchController extends Controller
             true
         );
         Playlist::find($request->input('pl_id'))->increment('pl_keyword_clicks');
+
         return response()->json(collect($videos)->flatten()->pluck('id')->pluck('videoId'));
     }
 
@@ -316,6 +330,13 @@ class SearchController extends Controller
         $pl_keys = session()->get('search_keys');
         $location = session()->get('search_location');
         $video_meta = session()->get('video_meta');
+        $coordinates = session()->get('coordinates');
+
+        $show_tutorial_message = false;
+        if (session()->has('show_tutorial_message')) {
+            $show_tutorial_message = true;
+            session()->forget('show_tutorial_message');
+        }
 
         if (($user = Auth::user()) && (session()->has('create_from_demo'))) {
             $default_playlist_title = '';
@@ -323,8 +344,18 @@ class SearchController extends Controller
             do {
                 $pl_slug = Helper::generateRandomString();
             } while (Playlist::wherePlSlug($pl_slug)->count() != 0);
+
+            $coordinates = explode(',', $coordinates);
+            $coordinates['lat'] = $coordinates[0];
+            $coordinates['lng'] = $coordinates[1];
             // Create playlist
-            $playlist = Playlist::create(['pl_user' => Auth::user()->id, 'pl_title' => $default_playlist_title, 'pl_location' => $location, 'pl_slug' => $pl_slug]);
+            $playlist = Playlist::create([
+                'pl_user'     => Auth::user()->id,
+                'pl_title'    => $default_playlist_title,
+                'pl_location' => $location,
+                'pl_slug'     => $pl_slug,
+                'coordinates' => $coordinates
+            ]);
 
             // Create playlist videos
             $plv = new PlaylistVideo;
@@ -338,10 +369,6 @@ class SearchController extends Controller
                 $plk->create(['plk_playlist' => $playlist->pl_id, 'plk_key' => $key_used['value'], 'plk_weight' => $key_used['weight'], 'plk_next_token' => $key_used['next_token']]);
             }
 
-            // Email notification
-            $email = new LogEmail;
-
-            $email->sendNewPlaylist($playlist);
             $redirect = url('playlist/edit/' . $playlist->pl_id);
             session()->forget('create_from_demo');
             session()->forget('search_keys');
@@ -373,7 +400,7 @@ class SearchController extends Controller
         $keys_string = implode(',', $keys);
 
 
-        return view('search.edit_demo_playlist', compact('selected', 'keys', 'resultsets', 'keys_string', 'videos'));
+        return view('search.edit_demo_playlist', compact('selected', 'keys', 'resultsets', 'keys_string', 'videos', 'show_tutorial_message'));
     }
 
     public function forgetDemoPlaylist(Request $request)
@@ -382,6 +409,7 @@ class SearchController extends Controller
         session()->forget('search_keys');
         session()->forget('search_location');
         session()->forget('video_meta');
+        session()->forget('coordinates');
 
         return response()->json(['redirect' => url('login')]);
     }
@@ -406,6 +434,11 @@ class SearchController extends Controller
 
             session()->put('search_keywords.' . $pl_key->plk_key, $pl_key->plk_next_token);
         }
+        $show_tutorial_message = false;
+        if (session()->has('show_tutorial_message')) {
+            $show_tutorial_message = true;
+            session()->forget('show_tutorial_message');
+        }
 
         $resultsets = $this->fetchVideos($playlist->pl_location, $keys, false, 1, true, $keys_used);
 
@@ -414,7 +447,7 @@ class SearchController extends Controller
         $videos = $playlist->videos;
         $video_ids = $videos->lists('plv_video_id')->toJson();
 
-        return view('search.edit_playlist', compact('playlist', 'selected', 'keys', 'resultsets', 'keys_string', 'owner', 'videos', 'video_ids'));
+        return view('search.edit_playlist', compact('playlist', 'selected', 'keys', 'resultsets', 'keys_string', 'owner', 'videos', 'video_ids', 'show_tutorial_message'));
     }
 
     public function editPlaylistMore(Playlist $playlist, Request $request)
@@ -524,22 +557,15 @@ class SearchController extends Controller
         return view('search.preview', compact('video', 'snippet', 'title'));
     }
 
-    // public function suggestRegion(Request $request)
-    // {
-    //   $repoCoun = new Country;
-    //
-    //   $continents = $repoCoun->continents();
-    //
-    //   return view('search.suggest_continent', compact('continents'));
-    // }
-
     // Location selection - based on region
 
     public function suggestLocation(Request $request, $region)
     {
-        $page_title = trans('meta_data.search_funnel_title') . ' | ' . $region;
+        $page_title = trans('meta_data.search_title') . ' | ' . $region;
 
-        $page_desc = trans('meta_data.search_funnel_desc');
+        $og_title = trans('meta_data.search_og_title') . ' | ' . $region;
+
+        $page_desc = trans('meta_data.search_desc');
 
         $page_img = asset('img/playligo_home_background_glacier.jpg');
 
@@ -551,7 +577,7 @@ class SearchController extends Controller
 
         $chunk_size = config('playligo.max_tags_per_cloud');
 
-        return view('search.suggest_location', compact('cities', 'region', 'page_title', 'page_desc', 'page_img', 'chunk_size'));
+        return view('search.suggest_location', compact('cities', 'region', 'page_title', 'page_desc', 'page_img', 'chunk_size', 'og_title'));
     }
 
 }

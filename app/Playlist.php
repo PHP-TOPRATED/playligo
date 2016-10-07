@@ -11,23 +11,25 @@ class Playlist extends Model
 {
     use ModelTrait;
 
-    protected $table      = 'playlists';
+    protected $table = 'playlists';
     protected $primaryKey = 'pl_id';
-    protected $fillable   = [
+    protected $fillable = [
         'pl_user',
         'pl_slug',
         'pl_title',
         'pl_description',
         'pl_status',
         'pl_location',
+        'coordinates',
         'pl_rating',
         'pl_rating_count',
         'pl_thumb_path'
     ];
-    protected $casts      = [
+    protected $casts = [
         'pl_status'         => 'boolean',
         'pl_visits'         => 'integer',
-        'pl_keyword_clicks' => 'integer'
+        'pl_keyword_clicks' => 'integer',
+        'coordinates'       => 'array',
     ];
 
     public static function boot()
@@ -126,6 +128,11 @@ class Playlist extends Model
     }
 
     public function scopePublished($query)
+    {
+        $query->wherePlStatus(true);
+    }
+
+    public function scopeHasVideos($query)
     {
         $query->wherePlStatus(true);
     }

@@ -98,7 +98,6 @@
 <script>
 // Ask Google Analytics which variation to show the user.
 var chosenVariation = cxApi.chooseVariation();
-console.log(chosenVariation);
 
 // Define JavaScript for each page variation of this experiment.
 var pageVariations = [

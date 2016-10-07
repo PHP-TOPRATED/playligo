@@ -197,7 +197,6 @@ $('body').on('click', '.btn-publish', function (event) {
                         publishPlaylist(pl_id, url);
                     },
                     error: function (xhr, status, error) {
-                        console.log(xhr.responseText);
                         var err = jQuery.parseJSON(xhr.responseText);
                         var errStr = '';
                         $.each(err, function (key, value) {

@@ -13,7 +13,7 @@ class GenPlaylistsUniqueId extends Command
      *
      * @var string
      */
-    protected $signature = 'playlists:slug';
+    protected $signature = 'playlist:slug';
 
     /**
      * The console command description.

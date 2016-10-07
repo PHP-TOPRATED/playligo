@@ -142,16 +142,8 @@ function getLatestSelected()
   $.ajax({
       url: "{{ url('/search/load_selected') }}",
       type: 'GET',
-      // dataType: 'json',
-      // data: {_token: "{{ csrf_token() }}"},
-      // success: function (data) {
-      //     // Update selected videos section
-      //     // $('#selected_videos').hide().fadeIn('fast');
-      //     $('#selected_videos').html();
-      // }
     }).done(function( data ) {
       $('#selected_videos').html(data);
-      // console.log( data );
   });
 
 }

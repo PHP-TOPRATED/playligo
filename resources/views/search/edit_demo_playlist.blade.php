@@ -12,10 +12,12 @@
                     {{ Form::text('search_keys', $keys_string, ['id'=>'tags', 'class'=>'form-control']) }}
                 </div>
                 <div class="col-md-2 col-sm-3 col-xs-6">
-                    <a href="{{ url('/login') }}" class="btn btn-success btn-wide" style="height:48px;line-height:48px;padding:0;">{{ trans('form.btn_update') }}</a>
+                    <a href="{{ url('/login') }}" class="btn btn-success btn-wide"
+                       style="height:48px;line-height:48px;padding:0;">{{ trans('form.btn_update') }}</a>
                 </div>
                 <div class="col-md-2 col-sm-3 col-xs-6">
-                    <a href="{{ url('/login') }}" class="btn btn-success btn-wide" style="height:48px;line-height:48px;padding:0;">{{ trans('form.btn_publish') }}</a>
+                    <a href="{{ url('/login') }}" class="btn btn-success btn-wide"
+                       style="height:48px;line-height:48px;padding:0;">{{ trans('form.btn_publish') }}</a>
                 </div>
             </div>
         </div>
@@ -56,11 +58,16 @@
         <div class="section">
             <div class="col-md-12">
                 @foreach($resultsets as $key => $result)
+                    <h5><span class="label label-info">{{ $key }}</span></h5>
+                    @if(empty($result))
+                        <div class="alert alert-info" role="alert">
+                            {{ trans('keywords.no_videos') }}
+                        </div>
+                    @endif
                     @if(!empty($result))
                         <div class="scroll keyword_selection">
-                            <h5><span class="label label-info">{{ $key }}</span></h5>
                             @foreach(array_chunk($result, 4) as $item_set)
-                                <div class="row">
+                                <div class="row jscroll-added">
                                     @foreach($item_set as $item)
                                         <div class="col-md-3 col-sm-6 col-xs-12 select_video_thumbnail">
                                             <a href="{{ url('search/preview/' . $item->id->videoId) }}"
@@ -80,11 +87,13 @@
                                                 @if (in_array($item->id->videoId, $selected))
                                                     <a id="video-{{ $item->id->videoId }}"
                                                        href="{{ url('/login') }}"
-                                                       class="remove_video_button btn-remove">{{ trans('form.remove_from_playlist') }}<i class="fa fa-minus-circle"></i></a>
+                                                       class="remove_video_button btn-remove">{{ trans('form.remove_from_playlist') }}
+                                                        <i class="fa fa-minus-circle"></i></a>
                                                 @else
                                                     <a id="video-{{ $item->id->videoId }}"
                                                        href="{{ url('/login') }}"
-                                                       class="add_video_button btn-add">{{ trans('form.add_to_playlist') }}<i class="fa fa-plus"></i>
+                                                       class="add_video_button btn-add">{{ trans('form.add_to_playlist') }}
+                                                        <i class="fa fa-plus"></i>
                                                     </a>
                                                 @endif
                                             </div>
@@ -122,7 +131,7 @@
         var player;
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('player', {
-                playerVars: {'autoplay': 1, 'controls': 2, 'showinfo': 1},
+                playerVars: {'autoplay': 0, 'controls': 2, 'showinfo': 1},
                 events: {
                     'onReady': onPlayerReady,
                     'onStateChange': onPlayerStateChange
@@ -137,7 +146,9 @@
                     @endforeach
             var videos = {!! json_encode($vid) !!};
             event.target.loadPlaylist(videos);
-            event.target.playVideo();
+            setTimeout(function () {
+                player.pauseVideo();
+            }, 900);
         }
 
         var done = false;
@@ -165,7 +176,9 @@
         });
 
         $(document).ready(function () {
-            swal('', '{{ trans('messages.edit_playlist_guide') }}');
+            @if($show_tutorial_message)
+                swal('', '{{ trans('messages.edit_playlist_guide') }}');
+            @endif
 
 
             $('#tags').tagEditor({

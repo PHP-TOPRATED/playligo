@@ -49,6 +49,16 @@
             </div>
         </div>
         <div class="row">
+            <div class="col-md-12">
+                <div class="alert alert-info alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                    Click and drag the keywords to rearrange the order of the videos. Add more keywords and separate
+                    them using "commas".
+                </div>
+            </div>
+        </div>
+        <div class="row">
             <div class="col-md-8">
                 <div class="video_wrapper">
                     <div id="player"></div>
@@ -85,8 +95,13 @@
         <div class="section">
             <div class="col-md-12">
                 @foreach($resultsets as $key => $result)
+                    <h5><span class="label label-info">{{ $key }}</span></h5>
+                    @if(empty($result))
+                        <div class="alert alert-info" role="alert">
+                            {{ trans('keywords.no_videos') }}
+                        </div>
+                    @endif
                     @if(!empty($result))
-                        <h5><span class="label label-info">{{ $key }}</span></h5>
                         <div class="scroll keyword_selection">
                             @foreach(array_chunk($result, 4) as $item_set)
                                 <div class="row jscroll-added">
@@ -127,7 +142,8 @@
                             @endforeach
                             <div class="load_more"><a
                                         href="{{ url('/edit_playlist/'.$playlist->pl_id.'/more?search_key=' . str_replace(' ', '+', $key)) }}">Load
-                                    more</a></div>
+                                                                                                                                               more</a>
+                            </div>
                         </div>
                     @endif
                 @endforeach
@@ -158,7 +174,7 @@
         var player;
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('player', {
-                playerVars: {'autoplay': 1, 'controls': 2, 'showinfo': 1},
+                playerVars: {'autoplay': 0, 'controls': 2, 'showinfo': 1, 'rel': 0},
                 events: {
                     'onReady': onPlayerReady,
                     'onStateChange': onPlayerStateChange
@@ -167,9 +183,12 @@
         }
 
         function onPlayerReady(event) {
-            var videos = {!! $video_ids !!};
+            var videos = [{!! $video_ids !!}];
             event.target.loadPlaylist(videos);
-            event.target.playVideo();
+            setTimeout(function () {
+                player.pauseVideo();
+            }, 900);
+
         }
 
         var done = false;
@@ -202,7 +221,6 @@
             var row_index = $(this).closest('.jscroll-added').index();
             var cell_index = $(this).closest('.select_video_thumbnail').index();
             var plv_order = (row_index * 4) + (cell_index + 1);
-            console.log(keyword);
             $.ajax({
                 url: $(this).attr('href'),
                 type: 'POST',
@@ -251,7 +269,9 @@
             return false;
         });
         $(document).ready(function () {
-            swal('', '{{ trans('messages.edit_playlist_guide') }}');
+            @if($show_tutorial_message)
+                swal('', '{{ trans('messages.edit_playlist_guide') }}');
+                    @endif
 
             var replaceWith = $('<input id="pl_title" name="pl_title" type="text" class="form-control" value="{{ $playlist->pl_title }}"/>'),
                     connectWith = $('input[name="hiddenField"]');
@@ -277,7 +297,6 @@
                             sweetAlert("Yay!", data.message, "success");
                         },
                         error: function (xhr, status, error) {
-                            console.log(xhr.responseText);
                             var err = jQuery.parseJSON(xhr.responseText);
                             var errStr = '';
                             $.each(err, function (key, value) {

@@ -35,13 +35,15 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $page_title = trans('meta_data.search_funnel_title');
+        $page_title = trans('meta_data.home_title');
 
-        $page_desc = trans('meta_data.search_funnel_desc');
+        $og_title = trans('meta_data.home_og_title');
+
+        $page_desc = trans('meta_data.home_desc');
 
         $page_img = asset('img/playligo_home_background_glacier.jpg');
 
-        return view('home', compact('page_title', 'page_desc', 'page_img'));
+        return view('home', compact('page_title', 'page_desc', 'page_img', 'og_title'));
     }
 
     // Poll page
@@ -165,6 +167,7 @@ class HomeController extends Controller
         $latest = $playlist->latest([$playlist->pl_id])->limit(3)->get();
 
         $videos = $playlist->videos;
+        dd($videos);
 
         $embed_code = '<iframe width="560" height="400" src="' . route("playlist.embed", ["pl_slug" => $playlist->pl_slug]) . '"></iframe>';
         // get info about first video

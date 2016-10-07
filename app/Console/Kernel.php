@@ -14,7 +14,9 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         Commands\GenPlaylistsUniqueId::class,
-        Commands\PublishPlaylists::class
+        Commands\PublishPlaylists::class,
+        Commands\PlaylistCoordinates::class,
+        Commands\PlaylistVideoKeywords::class
     ];
 
     /**
