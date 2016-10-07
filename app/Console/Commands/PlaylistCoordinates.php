@@ -47,7 +47,6 @@ class PlaylistCoordinates extends Command
                 ->get('results.geometry.location');
             $coordinates = $geocoding['results'][0]['geometry']['location'];
             $playlist->update(['coordinates' => $coordinates]);
-            $this->info("Successfully updated coordinates for $playlists->pl_title playlists");
         }
         $this->info("Successfully updated coordinates for $playlist_count playlists");
     }
