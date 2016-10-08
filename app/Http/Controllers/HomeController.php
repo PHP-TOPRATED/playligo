@@ -167,7 +167,6 @@ class HomeController extends Controller
         $latest = $playlist->latest([$playlist->pl_id])->limit(3)->get();
 
         $videos = $playlist->videos;
-        dd($videos);
 
         $embed_code = '<iframe width="560" height="400" src="' . route("playlist.embed", ["pl_slug" => $playlist->pl_slug]) . '"></iframe>';
         // get info about first video
