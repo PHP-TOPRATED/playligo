@@ -26,7 +26,7 @@
             <div class="scroll">
                 <div class="playlist-items clearfix">
                     @foreach($latest as $latest_item)
-                        <div class="col-md-4 col-sm-6 col-xs-12">
+                        <div class="col-md-3 col-sm-6 col-xs-12">
                             <div class="post medium-post playlist-item">
                                 <div class="entry-header">
                                     <div class="entry-thumbnail play_image_container">
