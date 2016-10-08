@@ -148,7 +148,7 @@
             event.target.loadPlaylist(videos);
             setTimeout(function () {
                 player.pauseVideo();
-            }, 900);
+            }, 1000);
         }
 
         var done = false;
