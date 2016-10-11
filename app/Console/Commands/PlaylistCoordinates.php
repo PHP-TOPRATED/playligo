@@ -45,8 +45,10 @@ class PlaylistCoordinates extends Command
             $geocoding = GoogleMaps::load('geocoding')
                 ->setParamByKey('address', $playlist->pl_location)
                 ->get('results.geometry.location');
-            $coordinates = $geocoding['results'][0]['geometry']['location'];
-            $playlist->update(['coordinates' => $coordinates]);
+            if (count($geocoding['results']) > 0) {
+                $coordinates = $geocoding['results'][0]['geometry']['location'];
+                $playlist->update(['coordinates' => $coordinates]);
+            }
         }
         $this->info("Successfully updated coordinates for $playlist_count playlists");
     }
