@@ -106,6 +106,13 @@
         {{--</div>--}}
         {{--</div>--}}
         <div class="section white-background">
+            <h5 class="section-title title">Hotel & Accommodation Deals</h5>
+            <div class="search-box">
+                @include('public.partials.search-box', ['playlist' => $playlist])
+            </div>
+        </div>
+        <div class="section white-background">
+            <h5 class="section-title title">Book Tours & Activities in {{$playlist->pl_location}}</h5>
             <div id="gyg-widget"></div>
         </div>
         <div class="section white-background">
@@ -230,10 +237,10 @@
     <script>
         @if (isset($share) && $share)
             $('#sharing-modal').modal('show');
-            $('#skip-sharing').click(function () {
-                $('#sharing-modal').modal('hide');
-                $('#feedback-comment-modal').modal('show');
-            });
+        $('#skip-sharing').click(function () {
+            $('#sharing-modal').modal('hide');
+            $('#feedback-comment-modal').modal('show');
+        });
         @endif
     </script>
     <script src="https://cdn.rawgit.com/vast-engineering/jquery-popup-overlay/1.7.13/jquery.popupoverlay.js"></script>

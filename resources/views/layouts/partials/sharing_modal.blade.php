@@ -4,7 +4,7 @@
             <div style="padding: 35px 15px 25px 15px;" class="modal-body">
                 <p style="font-size: 24px;" class="text-center">{{ $message }}</p>
                 <div class="sharing-container">
-                    <<div class="addthis_sharing_toolbox"></div>
+                    <div class="addthis_sharing_toolbox"></div>
                 </div>
                 <a href="#" id="skip-sharing" class="pull-right" data-dismiss="modal">Close</a>
             </div>

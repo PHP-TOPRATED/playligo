@@ -1,0 +1,31 @@
+.search-box {
+  margin-top: 30px;
+  #searchboxInc {
+    max-width: 555px;
+    width: 100%;
+  }
+  input[type="text"] {
+    color: #000000;
+    border: none;
+    padding: 2px 5px;
+  }
+  .btn-success {
+    background-color: #6fa806 !important;
+    &:hover {
+      background-color: #639705 !important;
+    }
+  }
+  #calendar {
+    //margin-left: -35px;
+    background-image: none;
+    padding: 0;
+    z-index: 1;
+    @include screen-sm-max {
+      top: 135px !important;
+      margin-left: -150px;
+    }
+    .caltable {
+      border-collapse: separate;
+    }
+  }
+}
