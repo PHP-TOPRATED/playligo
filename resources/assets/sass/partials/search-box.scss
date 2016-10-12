@@ -1,8 +1,13 @@
 .search-box {
   margin-top: 30px;
+  margin-bottom: 20px;
+  position: relative;
   #searchboxInc {
-    max-width: 555px;
+    //max-width: 555px;
     width: 100%;
+    form {
+      color: #333;
+    }
   }
   input[type="text"] {
     color: #000000;
@@ -16,12 +21,11 @@
     }
   }
   #calendar {
-    //margin-left: -35px;
     background-image: none;
     padding: 0;
     z-index: 1;
     @include screen-sm-max {
-      top: 135px !important;
+      top: 150px !important;
       margin-left: -150px;
     }
     .caltable {

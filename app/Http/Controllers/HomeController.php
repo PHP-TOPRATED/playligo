@@ -191,7 +191,9 @@ class HomeController extends Controller
 
         $page_title = $playlist->pl_title;
 
-        $page_desc = $playlist->pl_desc;
+//        $og_title = trans('meta_data.home_og_title');
+
+        $page_desc = trans('playlist.description', ['pl_location' => $playlist->pl_location]);
 
         $playlist_keys = implode(', ', array_column($playlist->keys()->get()->toArray(), 'plk_key'));
 

@@ -2,6 +2,7 @@
     <form id="frm" name="frm" action="http://www.booking.com/searchresults.html" method="get" target="_blank"
           autocomplete="off">
         <fieldset>
+            <p>Search Hotel Deals</p>
             <div id="destinationSearch">
                 <input type="hidden" name="aid" value="352866">
                 <input type="hidden" name="error_url" value="http://www.booking.com/?aid=352866;">

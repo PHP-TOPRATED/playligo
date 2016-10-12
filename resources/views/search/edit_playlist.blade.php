@@ -26,7 +26,7 @@
             </h3>
         </div>
 
-        <div class="section">
+        <div class="section mb5">
             <div class="row">
                 {{ Form::open(['url' => url('edit_keywords/' . $playlist->pl_id), 'class'=>'submit-ajaxx', 'method'=>'POST']) }}
                 <div class="col-md-8 col-sm-6 col-xs-12 mb15">
@@ -53,7 +53,7 @@
                 <div class="alert alert-info alert-dismissible" role="alert">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true">&times;</span></button>
-                    Click and drag the keywords to rearrange the order of the videos. Add more keywords and separate
+                    Click and drag the above keywords to rearrange the order of the videos. Add more keywords and separate
                     them using "commas".
                 </div>
             </div>

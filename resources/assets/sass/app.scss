@@ -27,6 +27,9 @@ $edit_playlist_mainvideo-height: 445px;
   padding-top: 25px;
   height: $video-height;
   margin-bottom: 25px;
+  @include screen-sm-max {
+    height: auto;
+  }
 }
 
 .video_wrapper iframe {
@@ -340,11 +343,21 @@ div.description_content {
   max-height: 120px;
 }
 
-.section.edit_playlist {
+.playback_queue {
   .playlist-scroll {
     height: 300px;
     @include screen-lg {
-      height: 376px;
+      height: 557px;
+    }
+  }
+}
+
+.section.edit_playlist {
+  margin-bottom: 20px;
+  .playlist-scroll {
+    height: 300px;
+    @include screen-lg {
+      height: 377px;
     }
   }
 }

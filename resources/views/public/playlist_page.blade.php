@@ -65,8 +65,8 @@
                 <div class="video_wrapper">
                     <div id="player"></div>
                 </div>
-                <div class="visible-sm-block visible-xs-block">
-                <!-- @include('public.playlist.desc_column') -->
+                <div class="search-box">
+                    @include('public.partials.search-box', ['playlist' => $playlist])
                 </div>
             </div>
             <div class="col-md-6">
@@ -105,12 +105,11 @@
         {{--data-width="100%"></div>--}}
         {{--</div>--}}
         {{--</div>--}}
-        <div class="section white-background">
-            <h5 class="section-title title">Hotel & Accommodation Deals</h5>
+        {{--<div class="section white-background">
             <div class="search-box">
                 @include('public.partials.search-box', ['playlist' => $playlist])
             </div>
-        </div>
+        </div>--}}
         <div class="section white-background">
             <h5 class="section-title title">Book Tours & Activities in {{$playlist->pl_location}}</h5>
             <div id="gyg-widget"></div>
