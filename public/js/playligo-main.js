@@ -242,3 +242,31 @@ function publishPlaylist(pl_id, url) {
         }
     });
 }
+
+function likePlaylist(btn) {
+    $.ajax({
+        url: "/playlist/like",
+        type: 'POST',
+        dataType: 'json',
+        data: {
+            playlist: $(btn).data('playlist')
+        }
+    })
+        .success(function (response) {
+            switch (response.status){
+                case 'liked':
+                    $(btn).addClass('active');
+                    $(btn).blur();
+                    break;
+                case 'unliked':
+                    $(btn).removeClass('active');
+                    $(btn).blur();
+                    break;
+                default:
+            }
+        })
+        .error(function (error) {
+            console.log(error);
+        })
+    ;
+}

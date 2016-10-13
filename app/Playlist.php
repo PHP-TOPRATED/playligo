@@ -67,6 +67,41 @@ class Playlist extends Model
         return $this->belongsTo('App\User', 'pl_user', 'id');
     }
 
+    public function likes()
+    {
+        return $this->belongsToMany(User::class, 'playlist_ratings', 'plr_playlist', 'plr_user');
+    }
+
+    /**
+     * Checks if current playlist is liked by current user
+     *
+     * @return bool
+     */
+    public function isLiked()
+    {
+        return $this->likes()->where('plr_user', '=', auth()->user()->id)->first() != null;
+    }
+
+    /**
+     * Like current playlist
+     *
+     * @return Model
+     */
+    public function like()
+    {
+        return $this->likes()->attach(auth()->user());
+    }
+
+    /**
+     * Unlike current playlist
+     *
+     * @return mixed
+     */
+    public function unLike()
+    {
+        return $this->likes()->detach(auth()->user());
+    }
+
     public function scopeFilter($query, $filter = [])
     {
         if (array_get($filter, 'pl_title')) {

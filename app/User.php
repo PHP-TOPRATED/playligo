@@ -48,6 +48,11 @@ class User extends Authenticatable
       return $this->hasMany('App\Poll', 'pol_user', 'id');
     }
 
+    public function likes()
+    {
+        return $this->belongsToMany(Playlist::class, 'playlist_ratings', 'plr_user', 'plr_playlist');
+    }
+
     public function feedback()
     {
         return $this->hasOne(Feedback::class);

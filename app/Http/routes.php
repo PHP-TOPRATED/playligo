@@ -113,10 +113,9 @@ Route::group(['middleware' => 'web'], function () {
         Route::post('/playlist/video/instant_delete', 'PlaylistVideoController@instantDestroy');
         Route::post('/playlist/video/add', 'PlaylistVideoController@store');
 
-        Route::post('/playlist/rating/add', 'PlaylistRatingController@store');
+        Route::post('/playlist/like', 'PlaylistRatingController@like');
 
         Route::group(['middleware' => ['role:admin']], function () {
-            // dd('ss');
             Route::get('/admin', 'AdminController@index');
             Route::get('/admin/user', 'UserController@index');
             Route::get('/admin/user/popup/{user}', 'UserController@popUp');

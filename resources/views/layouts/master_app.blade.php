@@ -26,12 +26,15 @@
     @stack('styles')
     <link href="{{ elixir('css/app.css') }}" rel="stylesheet">
     @yield('style')
-    <script src="//load.sumome.com/" data-sumo-site-id="12f06233c59661b6520eb33ff694b42a0caa863dcc1b7c72527912614ad97be2" async="async"></script>
+    @if(!in_array(Request::segment(1), ['new_search_keywords', 'playlist']))
+        <script src="//load.sumome.com/" data-sumo-site-id="12f06233c59661b6520eb33ff694b42a0caa863dcc1b7c72527912614ad97be2" async="async"></script>
+    @endif
     @yield('head_script')
 </head>
 <body>
     {{-- if user has to leave feedback --}}
     @if (Auth::user() && isset($shouldFeedback) && $shouldFeedback && request()->input('share') != 1)
+        <?php session()->put('shouldFeedback', false); ?>
         <link href="{{ asset('css/bars-square.css') }}" rel="stylesheet">
 
         <div class="modal fade" tabindex="-1" role="dialog" id="feedback-modal">
@@ -39,7 +42,7 @@
                 <div class="modal-content">
                     <div style="padding: 35px 15px;" class="modal-body">
                         <p style="font-size: 24px;" class="text-center">Please rate how effective is playligo in helping you discover and visualize new destinations</p>
-                        <select id="example" class="text-center">
+                        <select id="rating" class="text-center">
                             <option value="1">1</option>
                             <option value="2">2</option>
                             <option value="3">3</option>
@@ -96,7 +99,7 @@
             }
             addthis.addEventListener('addthis.menu.share', eventHandler);
 
-            $('#example').barrating({
+            $('#rating').barrating({
                 theme: 'bars-square',
                 showSelectedRating: false,
                 showValues: true,

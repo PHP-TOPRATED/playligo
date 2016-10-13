@@ -62,6 +62,11 @@ $edit_playlist_mainvideo-height: 445px;
   // font-size: 0.8em;
 }
 
+#gyg-widget {
+  margin-top: 40px;
+  margin-bottom: -20px;
+}
+
 .selected_disable {
   opacity: 0.4;
   filter: alpha(opacity=40); /* msie */

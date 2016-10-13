@@ -102,9 +102,6 @@ var chosenVariation = cxApi.chooseVariation();
 // Define JavaScript for each page variation of this experiment.
 var pageVariations = [
   function() {},  // Original: Do nothing. This will render the default HTML.
-  function() {    // Variation 1: Banner Image
-    $('#video').attr("src", "https://player.vimeo.com/video/174772811?api=1");
-  },
 ];
 </script>
 @endsection

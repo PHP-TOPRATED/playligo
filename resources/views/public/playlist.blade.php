@@ -24,7 +24,7 @@
         <div class="section clearfix">
             <h5 class="section-title title">@lang('form.playlist_latest')</h5>
             <div class="scroll">
-                <div class="playlist-items clearfix">
+                <div class="row playlist-items clearfix">
                     @foreach($latest as $latest_item)
                         <div class="col-md-3 col-sm-6 col-xs-12">
                             <div class="post medium-post playlist-item">
@@ -43,8 +43,16 @@
                                         <ul class="list-inline">
                                             <li class="views"><i class="fa fa-eye"></i>{{ $latest_item->pl_view }}
                                             </li>
-                                            <li class="loves">{{ FormError::rating('plRating', $latest_item->pl_rating) }}</li>
-                                            <li class="loves">{{ $latest_item->pl_rating }}</li>
+                                            <li>
+                                                @if(auth()->check())
+                                                    <button type="button"
+                                                            class="btn-like @if($latest_item->isLiked()) active @endif"
+                                                            data-playlist="{{ $latest_item->pl_slug }}"
+                                                            onclick="likePlaylist(this)">
+                                                        <i class="fa fa-thumbs-up" aria-hidden="true"></i>
+                                                    </button>
+                                                @endif
+                                            </li>
                                         </ul>
                                     </div>
                                     <h2 class="entry-title">
@@ -57,13 +65,12 @@
                 </div>
                 <div class="load_more"><a href="{{ url('public_playlist/latest/more?page=2') }}">Load more</a></div>
             </div>
-        </div>+
-
+        </div>
 
         <div class="section clearfix">
             <h5 class="section-title title">@lang('form.playlist_most_viewed')</h5>
             <div class="scroll">
-                <div class="playlist-items clearfix">
+                <div class="row playlist-items clearfix">
                     @foreach($mostViewed as $mv_item)
                         <div class="col-md-3 col-sm-6 col-xs-12">
                             <div class="post medium-post playlist-item">
@@ -82,8 +89,16 @@
                                         <ul class="list-inline">
                                             <li class="views"><a href="#"><i
                                                             class="fa fa-eye"></i>{{ $mv_item->pl_view }}</a></li>
-                                            <li class="loves">{{ FormError::rating('plRating', $mv_item->pl_rating) }}</li>
-                                            <li class="loves">{{ $mv_item->pl_rating }}</li>
+                                            <li>
+                                                @if(auth()->check())
+                                                    <button type="button"
+                                                            class="btn-like @if($mv_item->isLiked()) active @endif"
+                                                            data-playlist="{{ $mv_item->pl_slug }}"
+                                                            onclick="likePlaylist(this)">
+                                                        <i class="fa fa-thumbs-up" aria-hidden="true"></i>
+                                                    </button>
+                                                @endif
+                                            </li>
                                         </ul>
                                     </div>
                                     <h2 class="entry-title">
@@ -108,33 +123,11 @@
 
 @section('script')
     <script src="{{ asset('/js/jquery.jscroll.min.js') }}"></script>
-    <script src="{{ asset('js/jquery.barrating.min.js') }}"></script>
     <script>
         $('.scroll').jscroll({
             autoTrigger: false,
             loadingHtml: '<span class="label label-default">Loading...</span>',
         });
-
-        $(document).ready(function () {
-
-            ratingEnable();
-
-            // $(".plRating").rateYo({
-            //   starWidth: "18px",
-            //   rating    : 0,
-            //   readOnly: true
-            // });
-
-        });
-
-        function ratingEnable() {
-            $('.plRating').barrating('show', {
-                theme: 'fontawesome-circle-o',
-                showSelectedRating: true,
-                readonly: true,
-            });
-        }
-
     </script>
 @endsection
 
@@ -142,5 +135,4 @@
     <meta property="fb:app_id" content="{{ env('FACEBOOK_CLIENT_ID') }}"/>
     <meta property="og:url" content="{{ Request::url() }}"/>
     <meta property="og:type" content="website"/>
-    <!-- <meta property="og:image"         content="http://www.your-domain.com/path/image.jpg" /> -->
 @endsection

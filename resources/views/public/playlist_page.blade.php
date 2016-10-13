@@ -22,15 +22,11 @@
                             </a></li>
                         <li class="views"><a href="#"><i class="fa fa-eye"></i> {{ $playlist->pl_view }} views</a></li>
                         <li>
-                            {{ FormError::rating('plRating', 0) }}
-                        </li>
-                        <li>
-                            {{ Form::button('Rate', ['type'=>'button', 'class'=>'btn-xs btn-success btn ratingPopUp_open']) }}
                             @if(auth()->check())
-                                <div id="ratingPopUp" class="well text-center">
-                                    Enter your rating
-                                    {{ FormError::rating('newPlRating', 0) }}
-                                </div>
+                                <button type="button" class="btn-like @if($playlist->isLiked()) active @endif"
+                                        data-playlist="{{ $playlist->pl_slug }}" onclick="likePlaylist(this)">
+                                    <i class="fa fa-thumbs-up" aria-hidden="true"></i>
+                                </button>
                             @endif
                         </li>
                     </ul>
@@ -42,7 +38,6 @@
                 <div class="keywords-tabs">
                     <ul class="nav nav-tabs row playlist-keywords" role="tablist">
                         @foreach ($playlist->keys as $i => $key)
-                            {{--{{ dd($key) }}--}}
                             <li role="presentation" class="{{ $i === 0 ? 'active ' : '' }} text-center">
                                 <a href=""
                                    class="keyword-tab green"
@@ -244,7 +239,6 @@
     </script>
     <script src="https://cdn.rawgit.com/vast-engineering/jquery-popup-overlay/1.7.13/jquery.popupoverlay.js"></script>
     <script src="{{ asset('js/jquery-scrolltofixed.js') }}"></script>
-    <script src="{{ asset('js/jquery.barrating.min.js') }}"></script>
     @if($playlist->coordinates)
         <script async defer src="//widget.getyourguide.com/v2/core.js"
                 onload="GYG.Widget(document.getElementById('gyg-widget'),{'currency':'USD','lat':'{{$playlist->coordinates['lat']}}','lon':'{{$playlist->coordinates['lng']}}','localeCode':'en-US','numberOfItems':'4','partnerId':'HUBIIMY','type':'tour'});"></script>
@@ -257,41 +251,6 @@
                 $('#head-section').toggleClass('head-section');
                 $wrapper.css('background-image', 'url("' + background + '")');
             }
-        });
-
-        $(function () {
-
-            ratingEnable({{ $playlist->pl_rating }});
-
-            $('.newPlRating').barrating({
-                theme: 'fontawesome-circle-o',
-                initialRating: {{ $my_rating }},
-                showSelectedRating: true,
-                onSelect: function (value, text, event) {
-                    if (typeof(event) !== 'undefined') {
-                        $('#ratingPopUp').popup('hide');
-                        $.ajax({
-                            url: "{{ url('playlist/rating/add') }}",
-                            type: 'POST',
-                            dataType: 'json',
-                            data: {
-                                plr_playlist: {{ $playlist->pl_id }},
-                                plr_rating: value,
-                                _token: "{{ csrf_token() }}"
-                            },
-                            success: function (data) {
-                                sweetAlert("Yay!", data.message, "success");
-                                $('.plRating').barrating('destroy');
-                                ratingEnable(data.rating);
-                            }
-                        });
-                    } else {
-                        // rating was selected programmatically
-                        // by calling `set` method
-                    }
-                }
-            });
-
         });
 
         /**
@@ -315,16 +274,6 @@
                 results[0].click();
             });
         });
-
-        function ratingEnable(rating) {
-            $('.plRating').barrating('show', {
-                theme: 'fontawesome-circle-o',
-                initialRating: rating,
-                showSelectedRating: true,
-                readonly: true
-            });
-
-        }
     </script>
 
     <!--FB comment plugin-->
@@ -367,7 +316,7 @@
             event.target.loadPlaylist(videos);
             setTimeout(function () {
                 player.pauseVideo();
-            }, 1000);
+            }, 1500);
         }
 
         var done = false;

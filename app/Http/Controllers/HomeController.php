@@ -166,7 +166,7 @@ class HomeController extends Controller
         // $random = $playlist->random([$playlist->pl_id])->limit(5)->get();
         $latest = $playlist->latest([$playlist->pl_id])->limit(3)->get();
 
-        $videos = $playlist->videos;
+        $videos = $playlist->videos()->where('keyword', '!=', '')->get();
 
         $embed_code = '<iframe width="560" height="400" src="' . route("playlist.embed", ["pl_slug" => $playlist->pl_slug]) . '"></iframe>';
         // get info about first video
@@ -187,15 +187,13 @@ class HomeController extends Controller
 
         $latest_polls = $polRepo->withOwner()->latest()->limit(3)->get();
 
-        $my_rating = $plrRepo->myRating($playlist->pl_id, auth()->check() ? auth()->user()->id : 0);
-
         $page_title = $playlist->pl_title;
 
 //        $og_title = trans('meta_data.home_og_title');
 
         $page_desc = trans('playlist.description', ['pl_location' => $playlist->pl_location]);
 
-        $playlist_keys = implode(', ', array_column($playlist->keys()->get()->toArray(), 'plk_key'));
+        $playlist_keys = implode(', ', array_column($videos->pluck('keyword')->unique()->toArray(), 'plk_key'));
 
         // $page_img = unserialize($videos[0]->vc_snippet)->thumbnails->high->url;
         $page_img = null;
@@ -205,7 +203,22 @@ class HomeController extends Controller
         $share = (bool)Input::get('share');
         $url_refresh = md5(date('YmdHis'));
 
-        return view('public.playlist_page', compact('playlist', 'videos', 'owner', 'latest', 'page_title', 'page_desc', 'page_img', 'latest_polls', 'my_rating', 'playlist_keys', 'url_refresh', 'mostViewed', 'background', 'share', 'embed_code'));
+        return view('public.playlist_page', compact(
+            'playlist',
+            'videos',
+            'owner',
+            'latest',
+            'page_title',
+            'page_desc',
+            'page_img',
+            'latest_polls',
+            'playlist_keys',
+            'url_refresh',
+            'mostViewed',
+            'background',
+            'share',
+            'embed_code'
+        ));
     }
 
     public function playlistPopUp($playlist_slug)

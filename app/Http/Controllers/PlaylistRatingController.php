@@ -11,21 +11,21 @@ use App\PlaylistRating;
 
 class PlaylistRatingController extends Controller
 {
-    public function store(Request $request)
+    public function like(Request $request)
     {
-      $plrRepo = new PlaylistRating;
+        $plrRepo = new PlaylistRating;
 
-      $input = $request->all();
+        $playlist = Playlist::wherePlSlug($request->get('playlist'))->firstOrFail();
+        $status = null;
+        if ($playlist->isLiked()) {
+            $playlist->unLike();
+            $status = 'unliked';
+        } else {
+            $playlist->like();
+            $status = 'liked';
+        }
 
-      $input['plr_user'] = auth()->user()->id;
 
-      $plrRepo->clear(array_get($input, 'plr_playlist'), array_get($input, 'plr_user'));
-
-      PlaylistRating::create($input);
-
-      // Return the latest playlist rating
-      $rating = Playlist::find(array_get($input, 'plr_playlist'))->pl_rating;
-
-      return response()->json(['message' => 'Thanks for your rating!', 'rating' => $rating]);
+        return response()->json(['status' => $status]);
     }
 }

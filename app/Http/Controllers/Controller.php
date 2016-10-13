@@ -14,7 +14,7 @@ class Controller extends BaseController
     public function __construct()
     {
         // check if user has already left feedback and share this variable between all views
-        if (\Auth::user()) {
+        if (\Auth::user() && session()->get('shouldFeedback')) {
             view()->share('shouldFeedback', \Auth::user()->feedback == null);
         }
         session()->put('last_page', request()->url());
